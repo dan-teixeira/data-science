@@ -1,5 +1,5 @@
 """
-    Utility functions to simplify and enhance interactions with DataFrames.
+    Utility functions to simplify DataFrame handling and model building.
 """
 
 import unicodedata
