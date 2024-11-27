@@ -35,14 +35,14 @@ def pascal_to_snake(string: str) -> str:
 
     return (
         string[0]
-        + "".join([f"_{s}" if s.isupper() else s for s in string[1:].replace("_", "")])
+        + "".join([f"_{s}" if s.isupper() else s for s in string[1:]])
     ).lower()
 
 
-def get_formula(df: pd.DataFrame, endog: str, drop_columns: list = []) -> str:
+def get_formula(df: pd.DataFrame, endog: str, drop: list = []) -> str:
 
     return (
         endog
         + " ~ "
-        + " + ".join([col for col in df.drop(drop_columns).columns if col != endog])
+        + " + ".join([col for col in df.drop(drop, axis=1).columns if col != endog])
     )
