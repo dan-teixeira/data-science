@@ -1,5 +1,5 @@
 """
-    Utility functions to simplify DataFrame handling and model building.
+    Utility functions to simplify DataFrame handling and modeling.
 """
 
 import unicodedata
@@ -10,7 +10,9 @@ from numpy import vectorize
 def vector(f):
     def wrapper(*arg, **kwargs):
         return vectorize(f)(*arg, **kwargs)
+
     return wrapper
+
 
 @vector
 def normalize_string(string: str) -> str:
@@ -28,8 +30,19 @@ def normalize_string(string: str) -> str:
     )
 
 
-def get_formula(df: pd.DataFrame, endog: str) -> str:
+@vector
+def pascal_to_snake(string: str) -> str:
 
-    exog = " + ".join([col for col in df.columns if col != endog])
+    return (
+        string[0]
+        + "".join([f"_{s}" if s.isupper() else s for s in string[1:].replace("_", "")])
+    ).lower()
 
-    return (endog + " ~ " + exog)
+
+def get_formula(df: pd.DataFrame, endog: str, drop_columns: list = []) -> str:
+
+    return (
+        endog
+        + " ~ "
+        + " + ".join([col for col in df.drop(drop_columns).columns if col != endog])
+    )
