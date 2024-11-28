@@ -1,5 +1,5 @@
 """
-    Utility functions to simplify DataFrame handling and modeling.
+    Utility functions to simplify data wrangling and DataFrame manipulation.
 """
 
 import unicodedata
@@ -34,15 +34,14 @@ def normalize_string(string: str) -> str:
 def pascal_to_snake(string: str) -> str:
 
     return (
-        string[0]
-        + "".join([f"_{s}" if s.isupper() else s for s in string[1:]])
+        string[0] + "".join([f"_{s}" if s.isupper() else s for s in string[1:]])
     ).lower()
 
 
-def get_formula(df: pd.DataFrame, endog: str, drop: list = []) -> str:
+def get_formula(df: pd.DataFrame, endog: str, drop_columns: list = []) -> str:
 
     return (
         endog
         + " ~ "
-        + " + ".join([col for col in df.drop(drop, axis=1).columns if col != endog])
+        + " + ".join([col for col in df.drop(drop_columns, axis=1).columns if col != endog])
     )
