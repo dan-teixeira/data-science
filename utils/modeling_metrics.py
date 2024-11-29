@@ -3,6 +3,7 @@
 """
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -66,3 +67,31 @@ def confusion_matrix(logit_model, cutoff: int, color: str = "Blues"):
             recall_score(y_true=observed, y_pred=classified, pos_label=0)
         ),
     }
+
+
+def confusion_metrics(logit_model) -> pd.DataFrame:
+
+    observed = logit_model.model.endog
+
+    predict = logit_model.predict()
+
+    df = pd.DataFrame(
+        columns=["accuracy", "sensitivity", "specificity"],
+        index=pd.Series(name="cutoff"),
+    )
+
+    for cutoff in np.linspace(0.01, 1, 100):
+
+        classified = predict >= cutoff
+
+        df.loc[cutoff] = [
+            accuracy_score(y_true=observed, y_pred=classified),
+            recall_score(
+                y_true=observed, y_pred=classified, pos_label=1, zero_division=np.nan
+            ),
+            recall_score(
+                y_true=observed, y_pred=classified, pos_label=0, zero_division=np.nan
+            ),
+        ]
+
+    return df.reset_index()
