@@ -5,6 +5,7 @@
 import unicodedata
 import pandas as pd
 from numpy import vectorize
+import re
 
 
 def vector(f):
@@ -16,17 +17,19 @@ def vector(f):
 
 @vector
 def normalize_string(string: str) -> str:
-    return (
-        "".join(
-            [
-                s
-                for s in unicodedata.normalize("NFD", string)
-                if unicodedata.category(s) != "Mn"
-            ]
-        )
-        .lower()
-        .strip()
-        .replace(" ", "_")
+    return "".join(
+        [
+            s
+            for s in unicodedata.normalize(
+                "NFD",
+                re.sub(
+                    string=string.strip().lower().replace(" ", "_"),
+                    pattern=r"[^a-zA-Z1-9\s_]",
+                    repl="",
+                ),
+            )
+            if unicodedata.category(s) != "Mn"
+        ]
     )
 
 
@@ -43,5 +46,7 @@ def get_formula(df: pd.DataFrame, endog: str, drop_columns: list = []) -> str:
     return (
         endog
         + " ~ "
-        + " + ".join([col for col in df.drop(drop_columns, axis=1).columns if col != endog])
+        + " + ".join(
+            [col for col in df.drop(drop_columns, axis=1).columns if col != endog]
+        )
     )
