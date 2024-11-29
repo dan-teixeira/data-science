@@ -9,6 +9,9 @@ import seaborn as sns
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.api import add_constant
 from sklearn.metrics import accuracy_score, recall_score
+import warnings
+
+warnings.filterwarnings(action="ignore", category=RuntimeWarning, module="statsmodels")
 
 
 def vif_tolerance(df: pd.DataFrame, endog: str, drop_columns: list = []):
