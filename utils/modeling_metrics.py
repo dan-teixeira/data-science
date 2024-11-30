@@ -59,6 +59,7 @@ def confusion_matrix(logit_model, cutoff: int, color: str = "Blues"):
     plt.xlabel(ax.get_xlabel(), fontsize=15)
     plt.ylabel(ax.get_ylabel(), fontsize=15)
 
+    plt.title(f"cutoff = {cutoff:.2%}")
     plt.suptitle("Confusion Matrix", fontsize=18)
 
     return {

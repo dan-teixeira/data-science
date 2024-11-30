@@ -15,6 +15,17 @@ def vector(f):
     return wrapper
 
 
+def count_na_rows(df: pd.DataFrame, drop: bool = False, how: str = "any") -> int:
+    na_count = df.isna().any(axis=1).sum()
+    print(f"Number of rows with missing values: {na_count}")
+    if na_count and drop:
+        print("Dropping NA rows...")
+        df.dropna(how=how, inplace=True)
+        na_count = df.isna().any(axis=1).sum()
+        print(f"Number of rows with missing values: {na_count}")
+    return na_count
+
+
 @vector
 def normalize_string(string: str) -> str:
     return "".join(
